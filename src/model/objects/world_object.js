@@ -40,4 +40,4 @@ class WorldObject {
 }
 WorldObject.id = 0;
 
-module.exports = WorldObject;
+export default WorldObject;

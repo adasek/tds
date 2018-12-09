@@ -1,4 +1,5 @@
 'use strict'
+import Soldier from './soldier';
 
 class Player extends Soldier {
     constructor(opts) {
@@ -9,4 +10,4 @@ class Player extends Soldier {
     }
 }
 
-module.exports = Player;
+export default Player;

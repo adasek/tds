@@ -1,4 +1,6 @@
 'use strict'
+import WorldObject from './world_object';
+import Circle from '../shapes/circle';
 
 class Soldier extends WorldObject {
     constructor(opts) {
@@ -12,4 +14,4 @@ class Soldier extends WorldObject {
     }
 }
 
-module.exports = Soldier;
+export default Soldier;

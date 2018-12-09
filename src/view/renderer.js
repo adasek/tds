@@ -22,7 +22,7 @@ class Renderer {
         for (var i = 0; i < world.gameObjects.length; i++) {
             var object = world.gameObjects[i];
             //go through the game objects
-            htmlElement = this.findOrCreateElement(object);
+            var htmlElement = this.findOrCreateElement(object);
 
             if (object.shape.constructor.name === "Circle") {
                 //Radius: in the shape
@@ -31,8 +31,8 @@ class Renderer {
                 htmlElement.style.borderRadius = "25%";
                 htmlElement.style.x = object.x - object.shape.radius;
                 htmlElement.style.y = object.y - object.shape.radius;
-                htmlElement.style.rotation = this.gameObjects[i].rotation;
-                htmlElement.style.color = object.color;
+                htmlElement.style.rotation = object.rotation;
+                htmlElement.style.backgroundColor = object.color;
                 htmlElement.style.width = (object.shape.radius * 2) + "px";
                 htmlElement.style.height = (object.shape.radius * 2) + "px";
             } else {

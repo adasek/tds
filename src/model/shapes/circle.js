@@ -1,15 +1,17 @@
 /**
  * Shape creating the circle
  */
+import Shape from './shape';
 
 class Circle extends Shape {
     constructor(opts) {
-        opts.radius = opts.radius || 10;
-
+        
+        
         super(opts);
+        this.radius = opts.radius || 10;
+        
     }
 
 }
 
-
-module.exports = Circle;
+export default Circle;
