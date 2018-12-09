@@ -10,7 +10,8 @@ window.onload = function () {
     
     //start simulation
     //temporary
-    setInterval(world.tick.bind(world, 50), 50);
+    setInterval(world.tick.bind(world, 50/1000), 50);
+        
 
     //starts rendering
     var renderer = new Renderer(world);

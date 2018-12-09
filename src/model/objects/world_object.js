@@ -14,8 +14,8 @@ class WorldObject {
         this.shape = opts.shape ? opts.shape : new Point();
         this.rotation = opts.rotation || 0; //in rads, starting orientation to the right ->
         this.rotationChange = opts.rotationChange || 0; //differential of rotation
-        this.color = 'red';
-        this.speed = 0;
+        this.speed = opts.speed || 0;
+        this.color = opts.color || 'red';
         this.speedChange = opts.speedChange || 0; //differential of speed
 
         this.id = WorldObject.id++;
@@ -27,13 +27,12 @@ class WorldObject {
      * @returns {undefined}
      */
     tick(elapsedTime) {
-
         // apply speed in the vector of rotation
         this.x += Math.sin(this.rotation) * this.speed * elapsedTime;
         this.y += Math.cos(this.rotation) * this.speed * elapsedTime;
 
         // new rotation
-        this.rotation = this.rotation + this.rotationMovement;
+        this.rotation = this.rotation + this.rotationChange;
 
     }
 

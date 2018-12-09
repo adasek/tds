@@ -15,7 +15,8 @@ class World {
 
     populate() {
         //create something 
-        this.gameObjects.push(new Soldier({x: 150, y: 200}));
+        var soldier1 = new Soldier({x: 150, y: 200, speed: 10, rotation: Math.pi * 3 / 4});
+        this.gameObjects.push(soldier1);
 
     }
 
@@ -25,7 +26,7 @@ class World {
      * @returns {undefined}
      */
     tick(elapsedTime) {
-        for (var i = 0; i < this.gameObjects; i++) {
+        for (var i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].tick(elapsedTime);
         }
     }

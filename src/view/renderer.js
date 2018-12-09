@@ -29,8 +29,8 @@ class Renderer {
                 //color, center x, center y in gameObjects[i]
                 //show such a circle in css
                 htmlElement.style.borderRadius = "25%";
-                htmlElement.style.x = object.x - object.shape.radius;
-                htmlElement.style.y = object.y - object.shape.radius;
+                htmlElement.style.left = (object.x - object.shape.radius) + "px";
+                htmlElement.style.top = (object.y - object.shape.radius) + "px";
                 htmlElement.style.rotation = object.rotation;
                 htmlElement.style.backgroundColor = object.color;
                 htmlElement.style.width = (object.shape.radius * 2) + "px";
@@ -40,6 +40,7 @@ class Renderer {
             }
 
         }
+        window.requestAnimationFrame(this.render.bind(this, world));
     }
 
     findOrCreateElement(obj) {
