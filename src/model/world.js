@@ -1,10 +1,17 @@
+'use strict'
+
 class World {
 
     constructor(aspectRatio) {
-        this.height = 10000;
-        this.width = 10000 * aspectRatio;
+        this.height = 1000;
+        this.width = 1000* aspectRatio;
+        
+        //player, gun, bullets, enemies...
+        this.gameObjects = [];
     }
-
+    
+    
+    
 }
 
 
