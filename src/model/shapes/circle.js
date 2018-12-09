@@ -8,6 +8,8 @@ class Circle extends Shape {
 
         super(opts);
     }
-    
-    
+
 }
+
+
+module.exports = Circle;
