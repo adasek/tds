@@ -41,7 +41,6 @@ class WorldObject {
     }
 
     rotateLeft(elapsedTime) {
-        console.log("L " + elapsedTime);
         this.rotationChange += 0.2 * elapsedTime / 1000;
         if (this.rotationChange > 0.2) {
             this.rotationChange = 0.2;
