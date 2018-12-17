@@ -28,10 +28,10 @@ class Renderer {
                 //Radius: in the shape
                 //color, center x, center y in gameObjects[i]
                 //show such a circle in css
-                htmlElement.style.borderRadius = "25%";
+                htmlElement.style.borderRadius = "20%";
                 htmlElement.style.left = (object.x - object.shape.radius) + "px";
                 htmlElement.style.top = (object.y - object.shape.radius) + "px";
-                htmlElement.style.rotation = object.rotation;
+                htmlElement.style.transform = 'rotate(' + (parseFloat(object.rotation) * 180) / Math.PI + 'deg)';
                 htmlElement.style.backgroundColor = object.color;
                 htmlElement.style.width = (object.shape.radius * 2) + "px";
                 htmlElement.style.height = (object.shape.radius * 2) + "px";

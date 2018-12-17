@@ -33,7 +33,19 @@ class WorldObject {
 
         // new rotation
         this.rotation = this.rotation + this.rotationChange;
+        //slow down rotationChange
+        this.rotationChange -= 0.01 * elapsedTime;
+        if (this.rotationChange < 0) {
+            this.rotationChange = 0;
+        }
+    }
 
+    rotateLeft(elapsedTime) {
+        console.log("L " + elapsedTime);
+        this.rotationChange += 0.2 * elapsedTime / 1000;
+        if (this.rotationChange > 0.2) {
+            this.rotationChange = 0.2;
+        }
     }
 
 }
