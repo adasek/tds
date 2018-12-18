@@ -6,6 +6,8 @@
 
 'use strict'
 
+import PhysicalProperty from '../physical_property';
+
 class WorldObject {
 
     constructor(opts) {
@@ -13,11 +15,20 @@ class WorldObject {
         this.y = opts.y || 0;
         this.shape = opts.shape ? opts.shape : new Point();
         this.rotation = opts.rotation || 0; //in rads, starting orientation to the right ->
-        this.rotationChange = opts.rotationChange || 0; //differential of rotation
         this.speed = opts.speed || 0;
         this.color = opts.color || 'red';
         this.speedChange = opts.speedChange || 0; //differential of speed
+        this.currentTime = opts.currentTime || new Date();
 
+        this.rotationChange = new PhysicalProperty({
+            "max": Math.PI * 2 / 1000, //maximum per 1ms
+            "min": -Math.PI * 2 / 1000,
+            "default": 0,
+            "increaseSlopePositive": 10 * Math.PI / 1000, //increase per 1ms, from default to max
+            "decreaseSlopePositive": 100 * Math.PI / 1000, //decrease 1ms, from max to default
+            "decreaseSlopeNegative": 10 * Math.PI / 1000, //decrease 1ms, from default to min 
+            "increaseSlopeNegative": 100 * Math.PI / 1000  //increase per 1ms, from min to default
+        });
         this.id = WorldObject.id++;
     }
 
@@ -27,24 +38,43 @@ class WorldObject {
      * @returns {undefined}
      */
     tick(elapsedTime) {
-        // apply speed in the vector of rotation
-        this.x += Math.sin(this.rotation) * this.speed * elapsedTime;
-        this.y += Math.cos(this.rotation) * this.speed * elapsedTime;
+        var newTime = new Date(this.currentTime.getTime() + elapsedTime);
 
-        // new rotation
-        this.rotation = this.rotation + this.rotationChange;
-        //slow down rotationChange
-        this.rotationChange -= 0.01 * elapsedTime;
-        if (this.rotationChange < 0) {
-            this.rotationChange = 0;
+        if (typeof (elapsedTime) !== "number" || Number.isNaN(elapsedTime)) {
+            throw "elapsedTime";
         }
+        if (typeof (this.rotation) !== "number" || Number.isNaN(this.rotation)) {
+            throw "this.rotation";
+        }
+        //diff:
+        //this.rotation.valueSum(this.currentTime, newTime)
+        this.rotation += this.rotationChange.valueAt(this.currentTime) * elapsedTime;
+        if (typeof (this.rotation) !== "number" || Number.isNaN(this.rotation)) {
+            console.error("cha=" + this.rotationChange.valueAt(this.currentTime));
+            console.error("elapsedTime=" + elapsedTime);
+            throw "this.rotationB";
+        }
+
+        this.rotationAngle = this.rotation * 180 / Math.PI + "deg";
+
+        // apply speed in the vector of rotation
+        //this.x += Math.sin(this.rotation.value) * this.speed * elapsedTime;
+        //this.y += Math.cos(this.rotation.value) * this.speed * elapsedTime;
+
+        this.currentTime = newTime;
     }
 
-    rotateLeft(elapsedTime) {
-        this.rotationChange += 0.2 * elapsedTime / 1000;
-        if (this.rotationChange > 0.2) {
-            this.rotationChange = 0.2;
-        }
+    beginIncreasingRotation(opts) {
+        this.rotationChange.beginIncreasing(opts);
+    }
+    endIncreasingRotation(opts) {
+        this.rotationChange.endIncreasing(opts);
+    }
+    beginDecreasingRotation(opts) {
+        this.rotationChange.beginDecreasing(opts);
+    }
+    endDecreasingRotation(opts) {
+        this.rotationChange.endDecreasing(opts);
     }
 
 }

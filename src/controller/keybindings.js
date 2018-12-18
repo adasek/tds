@@ -25,11 +25,53 @@ class KeyBindings {
     }
 
     keydown(event) {
-        this.keyPressed[event.code] = new Date();
+        if (this.keyPressed[event.code] > 0) {
+            //already pressed
+        } else {
+            this.keyPressed[event.code] = new Date();
+
+            var methodName = "";
+            var mParam = {
+                time: this.keyPressed[event.code]
+            };
+
+            var kCode = event.code;
+            //Different bindings
+            if (kCode === 'KeyA') {
+                methodName = "beginIncreasingRotation";
+            } else if (kCode === 'KeyD') {
+                methodName = "beginDecreasingRotation";
+            }
+
+            if (methodName.length > 0) {
+                this.subject[methodName](mParam);
+            }
+        }
     }
 
     keyup(event) {
-        delete(this.keyPressed[event.code]);
+        if (!(event.code in this.keyPressed)) {
+            //not
+        } else {
+            delete(this.keyPressed[event.code]);
+
+            var methodName = "";
+            var mParam = {
+                time: this.keyPressed[event.code]
+            };
+
+            var kCode = event.code;
+            //Different bindings
+            if (kCode === 'KeyA') {
+                methodName = "endIncreasingRotation";
+            } else if (kCode === 'KeyD') {
+                methodName = "endDecreasingRotation";
+            }
+
+            if (methodName.length > 0) {
+                this.subject[methodName](mParam);
+            }
+        }
     }
 
     /**
@@ -49,11 +91,6 @@ class KeyBindings {
                 this.keyPressed[kCode] = true;
             }
 
-            if (this.keyPressed[kCode] === true) {
-                if (kCode === 'KeyA') {
-                    this.subject.rotateLeft(myTime);
-                }
-            }
         }
     }
 

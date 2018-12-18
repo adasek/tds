@@ -10,7 +10,9 @@
   ],
   "author": "Adam",
   "contributors": [],
-  "dependencies": {},
+  "dependencies": {
+    "event-emitter-es6": "^1.1.5"
+  },
   "main": "index.js",
   "directories": {
     "test": "test"

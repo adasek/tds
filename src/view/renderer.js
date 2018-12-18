@@ -31,7 +31,7 @@ class Renderer {
                 htmlElement.style.borderRadius = "20%";
                 htmlElement.style.left = (object.x - object.shape.radius) + "px";
                 htmlElement.style.top = (object.y - object.shape.radius) + "px";
-                htmlElement.style.transform = 'rotate(' + (parseFloat(object.rotation) * 180) / Math.PI + 'deg)';
+                htmlElement.style.transform = 'rotate(' + object.rotationAngle + ')';
                 htmlElement.style.backgroundColor = object.color;
                 htmlElement.style.width = (object.shape.radius * 2) + "px";
                 htmlElement.style.height = (object.shape.radius * 2) + "px";
@@ -40,7 +40,6 @@ class Renderer {
             }
 
         }
-        window.requestAnimationFrame(this.render.bind(this, world));
     }
 
     findOrCreateElement(obj) {

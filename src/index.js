@@ -11,16 +11,17 @@ import KeyBindings from './controller/keybindings'
 
             var keyBindings = new KeyBindings(world.player);
 
-            //start simulation
-            //temporary
-            setInterval(world.tick.bind(world, 50 / 1000), 50);
-
-            //keybindings
-            setInterval(keyBindings.tick.bind(keyBindings, 50 / 1000), 50);
-
-
-            //starts rendering
             var renderer = new Renderer(world);
 
+
+            //start simulation
+            //temporary
+            var tickFunc = function () {
+                world.tick(33);
+                renderer.render(world);
+                keyBindings.tick(33);
+                window.requestAnimationFrame(tickFunc);
+            };
+            window.requestAnimationFrame(tickFunc);
 
         };
