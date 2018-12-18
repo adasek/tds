@@ -14,13 +14,13 @@ class World {
 
 
         //create player
-        this.player = new Soldier({x: 300, y: 100, speed: 10, rotation: Math.pi * 3 / 4});
+        this.player = new Soldier({x: 300, y: 100, speed: 0, rotation: Math.pi * 3 / 4});
         this.gameObjects.push(this.player);
     }
 
     populate() {
         //create something 
-        var soldier1 = new Soldier({x: 150, y: 200, speed: 10, rotation: Math.pi * 3 / 4});
+        var soldier1 = new Soldier({x: 150, y: 200, color:'red', speed: 0.01, rotation: Math.pi * 3 / 4});
         this.gameObjects.push(soldier1);
     }
 

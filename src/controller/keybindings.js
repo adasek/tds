@@ -41,6 +41,10 @@ class KeyBindings {
                 methodName = "beginIncreasingRotation";
             } else if (kCode === 'KeyD') {
                 methodName = "beginDecreasingRotation";
+            } else if (kCode === 'KeyW') {
+                methodName = "beginIncreasingSpeedForward";
+            } else if (kCode === 'KeyS') {
+                methodName = "beginDecreasingSpeedForward";
             }
 
             if (methodName.length > 0) {
@@ -66,6 +70,10 @@ class KeyBindings {
                 methodName = "endIncreasingRotation";
             } else if (kCode === 'KeyD') {
                 methodName = "endDecreasingRotation";
+            }else if (kCode === 'KeyW') {
+                methodName = "endIncreasingSpeedForward";
+            } else if (kCode === 'KeyS') {
+                methodName = "endDecreasingSpeedForward";
             }
 
             if (methodName.length > 0) {

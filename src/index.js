@@ -20,8 +20,8 @@ import KeyBindings from './controller/keybindings'
                 world.tick(33);
                 renderer.render(world);
                 keyBindings.tick(33);
-                window.requestAnimationFrame(tickFunc);
+                //window.setTimeout(tickFunc,500);
+               window.requestAnimationFrame(tickFunc);
             };
             window.requestAnimationFrame(tickFunc);
-
         };
