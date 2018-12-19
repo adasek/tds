@@ -37,14 +37,18 @@ class KeyBindings {
 
             var kCode = event.code;
             //Different bindings
-            if (kCode === 'KeyA') {
+            if (kCode === 'ArrowLeft') {
                 methodName = "beginIncreasingRotation";
-            } else if (kCode === 'KeyD') {
+            } else if (kCode === 'ArrowRight') {
                 methodName = "beginDecreasingRotation";
             } else if (kCode === 'KeyW') {
                 methodName = "beginIncreasingSpeedForward";
             } else if (kCode === 'KeyS') {
                 methodName = "beginDecreasingSpeedForward";
+            }else if (kCode === 'KeyA') {
+                methodName = "beginIncreasingSpeedSide";
+            } else if (kCode === 'KeyD') {
+                methodName = "beginDecreasingSpeedSide";
             }
 
             if (methodName.length > 0) {
@@ -66,14 +70,18 @@ class KeyBindings {
 
             var kCode = event.code;
             //Different bindings
-            if (kCode === 'KeyA') {
+            if (kCode === 'ArrowLeft') {
                 methodName = "endIncreasingRotation";
-            } else if (kCode === 'KeyD') {
+            } else if (kCode === 'ArrowRight') {
                 methodName = "endDecreasingRotation";
             }else if (kCode === 'KeyW') {
                 methodName = "endIncreasingSpeedForward";
             } else if (kCode === 'KeyS') {
                 methodName = "endDecreasingSpeedForward";
+            }else if (kCode === 'KeyA') {
+                methodName = "endIncreasingSpeedSide";
+            } else if (kCode === 'KeyD') {
+                methodName = "endDecreasingSpeedSide";
             }
 
             if (methodName.length > 0) {

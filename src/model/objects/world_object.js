@@ -20,7 +20,7 @@ class WorldObject {
         this.currentTime = opts.currentTime || new Date();
 
         this.rotationChange = new PhysicalProperty({
-            "max": Math.PI  / 1000, //maximum per 1ms
+            "max": Math.PI / 1000, //maximum per 1ms
             "min": -Math.PI / 1000,
             "default": 0,
             "increaseSlopePositive": 10 * Math.PI / 1000, //increase per 1ms, from default to max
@@ -38,8 +38,18 @@ class WorldObject {
             "decreaseSlopeNegative": 10 / 1000,
             "increaseSlopeNegative": 10 / 1000
         });
+        this.speedSideChange = new PhysicalProperty({
+            "max": 1 / 1000, //maximum per 1ms
+            "min": -1 / 1000,
+            "default": 0,
+            "increaseSlopePositive": 1 / 1000,
+            "decreaseSlopePositive": 1 / 1000,
+            "decreaseSlopeNegative": 1 / 1000,
+            "increaseSlopeNegative": 1 / 1000
+        });
 
-
+        this.speedForward=0;
+        this.speedSide=0;
 
         this.id = WorldObject.id++;
     }
@@ -67,14 +77,39 @@ class WorldObject {
             throw "this.rotationB";
         }
 
-        this.rotationAngle =  (-this.rotation) * 180 / Math.PI + "deg";
+        this.rotationAngle = (-this.rotation) * 180 / Math.PI + "deg";
+
+        this.speedForward += this.speedForwardChange.valueAt(this.currentTime);
+        this.speedSide += this.speedSideChange.valueAt(this.currentTime);
+        
+        function applyFriction(value,friction){
+            if (value > 0) {
+            value -= friction;
+            if (value < 0) {
+                value = 0;
+            }
+        } else if (value < 0) {
+            value += friction;
+            if (value > 0) {
+                value = 0;
+            }
+        }
+        return value;
+        }
+        
+        // apply friction
+        this.speedForward = applyFriction(this.speedForward,0.001);
+        this.speedSide = applyFriction(this.speedSide,0.0001);
+        
 
         // apply speed in the vector of rotation
-        this.speed += this.speedForwardChange.valueAt(this.currentTime);
-      
-        this.x += Math.cos(this.rotation) * this.speed * elapsedTime;
-        this.y -= Math.sin(this.rotation) * this.speed * elapsedTime;
-
+        this.x += Math.cos(this.rotation) * this.speedForward * elapsedTime;
+        this.y -= Math.sin(this.rotation) * this.speedForward * elapsedTime;
+        // apply side speed - in the normal vector
+        
+        this.x += Math.cos(this.rotation+Math.PI/2) * this.speedSide * elapsedTime;
+        this.y -= Math.sin(this.rotation+Math.PI/2) * this.speedSide * elapsedTime;
+        
         this.currentTime = newTime;
     }
 
@@ -102,6 +137,19 @@ class WorldObject {
     }
     endDecreasingSpeedForward(opts) {
         this.speedForwardChange.endDecreasing(opts);
+    }
+    
+    beginIncreasingSpeedSide(opts) {
+        this.speedSideChange.beginIncreasing(opts);
+    }
+    endIncreasingSpeedSide(opts) {
+        this.speedSideChange.endIncreasing(opts);
+    }
+    beginDecreasingSpeedSide(opts) {
+        this.speedSideChange.beginDecreasing(opts);
+    }
+    endDecreasingSpeedSide(opts) {
+        this.speedSideChange.endDecreasing(opts);
     }
 }
 WorldObject.id = 0;
