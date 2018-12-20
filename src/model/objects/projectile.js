@@ -15,7 +15,7 @@ class Projectile extends WorldObject {
         opts = opts || {};
         opts.shape = opts.shape || new Circle({radius: 2});
         opts.color = opts.color || 'black';
-        opts.speedForward = opts.speedForward || 1;
+        opts.speedForward = opts.speedForward || 0.2;
         opts.speedSide = opts.speedSide || 0;
         super(opts);
 

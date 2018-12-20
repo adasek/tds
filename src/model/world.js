@@ -1,6 +1,7 @@
 'use strict'
 import Soldier from './objects/soldier';
 import Player from './objects/player';
+import Projectile from './objects/projectile';
 import ProjectileFactory from './projectile_factory';
 
 class World {
@@ -80,7 +81,7 @@ class World {
         }
 
         if ((this.tickCounter++) % 100 === 0) {
-            this.populate();
+            //  this.populate();
         }
 
         this.solveCollisions();
@@ -141,29 +142,66 @@ class World {
     }
 
     saveMemento() {
+
+        var gObjects = {soldiers: [], projectiles: []};
+        for (var i = 0; i < this.gameObjects.length; i++) {
+            if (this.gameObjects[i].type === "soldier") {
+                gObjects.soldiers.push(this.gameObjects[i]);
+            } else if (this.gameObjects[i].type === "projectile") {
+                gObjects.projectiles.push(this.gameObjects[i]);
+            }
+        }
+
         return JSON.stringify({
             "score": this.score,
-            "player": this.player
+            "player": this.player,
+            "gObjects": gObjects
         });
-        //,
-        //    "worldObjects": this.worldObjects
 
     }
 
     loadMemento(json) {
         //todo: cleanup 
         console.log("loadMemento");
+        //delete all world objects except for player
+        for (var k = 0; k < this.gameObjects.length; k++) {
+            if (this.gameObjects[k].type !== "player") {
+                this.gameObjects[k].destroy();
+            }
+        }
+        this.gameObjects = [];
+        this.gameObjects.push(this.player);
 
         var loadObject = JSON.parse(json);
-        console.log(loadObject.player);
         for (var key in loadObject.player) {
             this.player[key] = loadObject.player[key];
         }
-        console.log("player");
-        console.log(this.player);
 
         this.score = loadObject.score;
-        //this.worldObjects = loadObject.worldObjects;
+
+        //load projectiles
+        for (var i = 0; i < loadObject.gObjects.projectiles.length; i++) {
+            var params = {};
+
+            for (var key in loadObject.gObjects.projectiles[i]) {
+                params[key] = loadObject.gObjects.projectiles[i][key];
+            }
+            params.owner = this.player;
+            var projectile = new Projectile(params);
+            this.attach(projectile);
+        }
+        
+        
+        //load soldiers
+        for (var i = 0; i < loadObject.gObjects.soldiers.length; i++) {
+            var params = {};
+
+            for (var key in loadObject.gObjects.soldiers[i]) {
+                params[key] = loadObject.gObjects.soldiers[i][key];
+            }
+            var soldier = new Soldier(params);
+            this.attach(soldier);
+        }
 
     }
 
