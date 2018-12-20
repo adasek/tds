@@ -35,7 +35,8 @@ class Gun extends WorldObject {
         var projectile = this.projectileFactory.create({
             x: this.owner.x, 
             y: this.owner.y, 
-            rotation: this.owner.angleTo(this.target)
+            accuracy: accuracy,
+            angle: this.owner.angleTo(this.target)
         });
 
         this.target = null;
