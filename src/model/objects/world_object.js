@@ -194,6 +194,7 @@ class WorldObject extends EventEmitter {
 
     angleTo(target) {
         var angle = Math.acos((target.x-this.x) / this.distanceTo(target));
+        console.log("angle "+angle)
         return angle;
 
     }
