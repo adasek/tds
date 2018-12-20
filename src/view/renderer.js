@@ -98,7 +98,9 @@ class Renderer {
             this.htmlElements[id] = htmlElement;
 
             obj.on('destroy', function (_id) {
-                this.gameArea.removeChild(this.htmlElements[_id]);
+                if (typeof (this.htmlElements[_id]) !== "undefined" && this.htmlElements[_id] !== null) {
+                    this.gameArea.removeChild(this.htmlElements[_id]);
+                }
                 delete(this.htmlElements[_id]);
             }.bind(this, id));
         }

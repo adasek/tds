@@ -23,7 +23,11 @@ class WorldObject extends EventEmitter {
         this.currentTime = opts.currentTime || new Date();
         this.frictionForward = opts.frictionForward || 0;
         this.frictionSide = opts.frictionSide || 0;
-        this.worldTransform = opts.worldTransform || function(obj){return obj;};
+        this.owner = opts.owner || null;
+
+        this.worldTransform = opts.worldTransform || function (obj) {
+            return obj;
+        };
 
         this.rotationChange = new PhysicalProperty({
             "max": Math.PI / 1000, //maximum per 1ms
@@ -107,6 +111,8 @@ class WorldObject extends EventEmitter {
         this.speedForward = applyFriction(this.speedForward, this.frictionForward);
         this.speedSide = applyFriction(this.speedSide, this.frictionSide);
 
+        this.previousX = this.x;
+        this.previousY = this.y;
 
         // apply speed in the vector of rotation
         this.x += Math.cos(this.rotation) * this.speedForward * elapsedTime;
@@ -115,8 +121,13 @@ class WorldObject extends EventEmitter {
 
         this.x += Math.cos(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
         this.y += Math.sin(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
-        
+
         this.worldTransform(this);
+
+        if (this.destroyed) {
+            this.x = this.previousX;
+            this.y = this.previousY;
+        }
 
         this.currentTime = newTime;
     }
@@ -174,14 +185,14 @@ class WorldObject extends EventEmitter {
     }
 
     angleTo(target) {
-        var angle=0;
+        var angle = 0;
         if (target.y >= this.y) {
             //first and second quadrant
             angle = Math.acos((target.x - this.x) / this.distanceTo(target));
-        }else{
+        } else {
             //second and third quadrant
-            angle = 2*Math.PI - Math.acos((target.x - this.x) / this.distanceTo(target));
-            
+            angle = 2 * Math.PI - Math.acos((target.x - this.x) / this.distanceTo(target));
+
         }
         return angle;
 
@@ -192,7 +203,36 @@ class WorldObject extends EventEmitter {
     }
 
     destroy() {
+        this.destroyed = true;
         this.emit('destroy');
+    }
+
+    collidesWith(obj) {
+        if (this.destroyed) {
+            return;
+        }
+
+        if (this.shape.type === "circle" && obj.shape.type === "circle") {
+            var dist = this.distanceTo(obj);
+            //TODO: the paths crossed:
+
+            if (this.type === "projectile" || obj.type === "projectile") {
+                //high speed
+                var projectile = this.type === "projectile" ? this : obj;
+                var stationary = this.type === "projectile" ? obj : this;
+                //https://brilliant.org/wiki/dot-product-distance-between-point-and-a-line/
+                var vect = {x: projectile.x - projectile.previousX, y: (projectile.y - projectile.previousY)};
+                //normalovy vektor
+                var a = vect.y;
+                var b = -vect.x;
+                var c = -a * projectile.x - b * projectile.y;
+                dist = Math.abs(a * stationary.x + b * stationary.y + c) / Math.sqrt(a * a + b * b);
+            }
+            return (dist < (this.shape.radius + obj.shape.radius));
+        } else {
+            throw "Collision of shapes not yet implemented";
+        }
+        return false;
     }
 
 }

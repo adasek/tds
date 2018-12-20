@@ -28,8 +28,29 @@ class World {
 
     populate() {
         //create something 
-        var soldier1 = new Soldier({x: 150, y: 200, color: 'red', speed: 0.01, rotation: Math.pi * 3 / 4});
-        this.attach(soldier1);
+        for (var i = 0; i < 1; i++) {
+            var soldier1 = new Soldier({x: Math.random() * this.width, y: Math.random() * this.height, color: 'red', speed: 0.1, rotation: Math.pi * 3 / 4});
+
+            this.attach(soldier1);
+        }
+    }
+
+    solveCollisions() {
+        for (var i = 0; i < this.gameObjects.length; i++) {
+            for (var n = 0; n < i - 1; n++) {
+                if (this.gameObjects[i].collidesWith(this.gameObjects[n])) {
+                    if (this.gameObjects[i].type === "projectile" || this.gameObjects[n].type === "projectile") {
+                        //one of objects is projectile, destroy objects
+                        if (this.gameObjects[i].owner === this.gameObjects[n] || this.gameObjects[n].owner === this.gameObjects[i]) {
+                            //self inflicted damage does not count
+                            continue;
+                        }
+                        this.gameObjects[i].destroy();
+                        this.gameObjects[n].destroy();
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -48,6 +69,9 @@ class World {
         for (var i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].tick(elapsedTime);
         }
+
+        this.solveCollisions();
+
     }
 
     createProjectileFactory() {
@@ -92,7 +116,7 @@ class World {
                 shifted = true;
             }
             if (object.type === "projectile" && shifted) {
-                this.destroy();
+                object.destroy();
             }
             return object;
         };

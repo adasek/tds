@@ -18,11 +18,11 @@ class Projectile extends WorldObject {
         opts.speedForward = opts.speedForward || 1;
         opts.speedSide = opts.speedSide || 0;
         super(opts);
+
         
-        this.type="projectile";
+        this.type = "projectile";
     }
-    
-    
+
 }
 
 export default Projectile;

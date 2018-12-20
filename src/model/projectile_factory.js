@@ -28,13 +28,13 @@ class ProjectileFactory {
         if (Math.random() > 0.5) {
             shootErr = -shootErr;
         }
-        console.log(opts.accuracy + "=>" + shootErr);
         angle += shootErr;
 
         var projectile = new Projectile({
             x: opts.x,
             y: opts.y,
-            rotation: angle
+            rotation: angle,
+            owner: opts.owner
         });
         this.world.attach(projectile);
 

@@ -139,6 +139,9 @@ class KeyBindings {
                 methodName = "beginShoot";
             } else if (code === 'MOUSE0' && type === "up") {
                 methodName = "endShoot";
+            }else if(code === 'MOUSE1' && type ==="up"){
+                //change 
+                
             }
 
             if (methodName.length > 0) {

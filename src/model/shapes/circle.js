@@ -7,7 +7,7 @@ class Circle extends Shape {
     constructor(opts) {
         super(opts);
         this.radius = opts.radius || 10;
-        
+        this.type="circle";
     }
 
 }
