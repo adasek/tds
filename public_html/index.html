@@ -8,13 +8,22 @@
         <style>
             #gameArea {position:relative;
                        background-color:#d0d0d0;
-                }
+            }
             #gameArea > * {position:absolute;}
+
+            #scoreBoard {position:fixed;
+                         text-align:center;
+                         background-color:rgba(255,255,255,0.4);
+                         font-size:200%;
+                         z-index:30;
+                         margin:0 auto;
+            }
+            #score {background-color:white;padding:0.3em;}
         </style>
 
     </head>
     <body>
-        <div id="score"></div>
+        <div id="scoreBoard"><span id="score"></span></div>
         <div id="gameArea"></div>
     </body>
 </html>

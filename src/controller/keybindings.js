@@ -22,11 +22,11 @@ class KeyBindings {
 
         gameArea.onmouseout = (function (event) {
             /*
-            if(event.target.id === "gameArea"){
-                console.log("out")
-            this.mouseToggle('up', event);
-        }
-            */
+             if(event.target.id === "gameArea"){
+             console.log("out")
+             this.mouseToggle('up', event);
+             }
+             */
         }).bind(this);
 
 
@@ -42,7 +42,7 @@ class KeyBindings {
          * @type {Object}
          */
         this.keyPressed = {};
-        
+
         // for mouse events
         this.gameArea = gameArea;
     }
@@ -59,6 +59,13 @@ class KeyBindings {
             };
 
             var kCode = event.code;
+            //Aliases
+            if (kCode === 'ArrowUp') {
+                kCode = "KeyW";
+            }
+            if (kCode === 'ArrowDown') {
+                kCode = "KeyS";
+            }
             //Different bindings
             if (kCode === 'ArrowLeft') {
                 methodName = "beginIncreasingRotation";
@@ -92,6 +99,13 @@ class KeyBindings {
             };
 
             var kCode = event.code;
+            //Aliases
+            if (kCode === 'ArrowUp') {
+                kCode = "KeyW";
+            }
+            if (kCode === 'ArrowDown') {
+                kCode = "KeyS";
+            }
             //Different bindings
             if (kCode === 'ArrowLeft') {
                 methodName = "endIncreasingRotation";
@@ -132,16 +146,16 @@ class KeyBindings {
             var mParam = {
                 time: this.keyPressed[event.code],
                 positionX: event.clientX - rect.left,
-                positionY: rect.height  - (event.clientY - rect.top) //bottom should be 0
+                positionY: rect.height - (event.clientY - rect.top) //bottom should be 0
             };
 
             if (code === 'MOUSE0' && type === "down") {
                 methodName = "beginShoot";
             } else if (code === 'MOUSE0' && type === "up") {
                 methodName = "endShoot";
-            }else if(code === 'MOUSE1' && type ==="up"){
+            } else if (code === 'MOUSE1' && type === "up") {
                 //change weapon
-                methodName = "toggleWeapon";    
+                methodName = "toggleWeapon";
             }
 
             if (methodName.length > 0) {
