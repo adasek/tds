@@ -32,11 +32,9 @@ class Gun extends WorldObject {
             throw "Should provide time";
         }
         this.preparingTime = opts.time;
-        console.log("Target acquired");
     }
 
     shootPerform(opts) {
-        console.log("Bang");
         var accuracy = this.getAccuracy({});
         //create projectile
         var projectile = this.projectileFactory.create({

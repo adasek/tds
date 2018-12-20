@@ -9,12 +9,10 @@
 import PhysicalProperty from '../physical_property';
 import Circle from '../shapes/circle';
 var EventEmitter = require('event-emitter-es6');
-
 class WorldObject extends EventEmitter {
 
     constructor(opts) {
         super();
-
         this.x = opts.x || 0;
         this.y = opts.y || 0;
         this.previousX = this.x;
@@ -26,11 +24,9 @@ class WorldObject extends EventEmitter {
         this.frictionForward = opts.frictionForward || 0;
         this.frictionSide = opts.frictionSide || 0;
         this.owner = opts.owner || null;
-
         this.worldTransform = opts.worldTransform || function (obj) {
             return obj;
         };
-
         this.rotationChange = new PhysicalProperty({
             "max": Math.PI / 1000, //maximum per 1ms
             "min": -Math.PI / 1000,
@@ -40,7 +36,6 @@ class WorldObject extends EventEmitter {
             "decreaseSlopeNegative": 10 * Math.PI / 1000, //decrease 1ms, from default to min 
             "increaseSlopeNegative": 100 * Math.PI / 1000  //increase per 1ms, from min to default
         });
-
         this.speedForwardChange = new PhysicalProperty({
             "max": 10 / 1000, //maximum per 1ms
             "min": -5 / 1000,
@@ -59,12 +54,9 @@ class WorldObject extends EventEmitter {
             "decreaseSlopeNegative": 1 / 1000,
             "increaseSlopeNegative": 1 / 1000
         });
-
         this.speedForward = opts.speedForward || 0;
         this.speedSide = opts.speedSide || 0;
-
         this.id = WorldObject.id++;
-
     }
 
     /**
@@ -74,7 +66,6 @@ class WorldObject extends EventEmitter {
      */
     tick(elapsedTime) {
         var newTime = new Date(this.currentTime.getTime() + elapsedTime);
-
         if (typeof (elapsedTime) !== "number" || Number.isNaN(elapsedTime)) {
             throw "elapsedTime";
         }
@@ -93,7 +84,6 @@ class WorldObject extends EventEmitter {
 
         this.speedForward += this.speedForwardChange.valueAt(this.currentTime);
         this.speedSide += this.speedSideChange.valueAt(this.currentTime);
-
         function applyFriction(value, friction) {
             if (value > 0) {
                 value -= friction;
@@ -112,10 +102,8 @@ class WorldObject extends EventEmitter {
         // apply friction
         this.speedForward = applyFriction(this.speedForward, this.frictionForward);
         this.speedSide = applyFriction(this.speedSide, this.frictionSide);
-
         this.previousX = this.x;
         this.previousY = this.y;
-
         // apply speed in the vector of rotation
         this.x += Math.cos(this.rotation) * this.speedForward * elapsedTime;
         this.y += Math.sin(this.rotation) * this.speedForward * elapsedTime;
@@ -123,9 +111,7 @@ class WorldObject extends EventEmitter {
 
         this.x += Math.cos(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
         this.y += Math.sin(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
-
         this.worldTransform(this);
-
         if (this.destroyed) {
             this.x = this.previousX;
             this.y = this.previousY;
@@ -185,9 +171,9 @@ class WorldObject extends EventEmitter {
             this.gun.shootPerform(opts);
         }
     }
-    
-    toggleWeapon(opts){
-        opts.time = opts.time || new Date();      
+
+    toggleWeapon(opts) {
+        opts.time = opts.time || new Date();
         if (typeof (this.gun) === "object" && this.gun !== null && typeof (this.gun.toggle) === "function") {
             this.gun.toggle(opts);
         }
@@ -201,10 +187,8 @@ class WorldObject extends EventEmitter {
         } else {
             //second and third quadrant
             angle = 2 * Math.PI - Math.acos((target.x - this.x) / this.distanceTo(target));
-
         }
         return angle;
-
     }
 
     distanceTo(target) {
@@ -214,6 +198,30 @@ class WorldObject extends EventEmitter {
     destroy() {
         this.destroyed = true;
         this.emit('destroy');
+    }
+
+    toJSON() {
+        return {
+            x: this.x,
+            y: this.y,
+            previousX: this.previousX,
+            previousY: this.previousY,
+            rotation: this.rotation,
+            color: this.color,
+            frictionForward: this.frictionForward,
+            frictionSide: this.frictionSide,
+            speedForward: this.speedForward,
+            speedSide: this.speedSide,
+            id: this.id
+                    /*
+                     shape: this.shape,
+                     currentTime: this.currentTime,
+                     owner:this.owner.id,
+                     rotationChange:this.rotationChange,
+                     speedForwardChange:this.speedForwardChange,
+                     speedSideChange:this.speedSideChange
+                     */
+        };
     }
 
     collidesWith(obj) {
@@ -226,7 +234,7 @@ class WorldObject extends EventEmitter {
             //TODO: the paths crossed:
 
             if (this.type === "projectile" || obj.type === "projectile") {
-                //high speed
+//high speed
                 var projectile = this.type === "projectile" ? this : obj;
                 var stationary = this.type === "projectile" ? obj : this;
                 //https://brilliant.org/wiki/dot-product-distance-between-point-and-a-line/
@@ -240,9 +248,9 @@ class WorldObject extends EventEmitter {
                 var vTarget1 = {x: projectile.previousX - obj.x, y: projectile.previousY - obj.y};
                 var vTarget2 = {x: projectile.x - obj.x, y: projectile.y - obj.y};
                 if (((vTarget2.y * vTarget1.y + vTarget2.x - vTarget1.x)) / Math.sqrt(Math.pow(vTarget2.x - vTarget1.x, 2) + Math.pow(vTarget2.y - vTarget1.y, 2)) < 0) {
-                    //cross product is negative
+//cross product is negative
 
-                    //dist from line is relevant
+//dist from line is relevant
                     dist = Math.abs(a * stationary.x + b * stationary.y + c) / Math.sqrt(a * a + b * b);
                 }
 
@@ -253,8 +261,6 @@ class WorldObject extends EventEmitter {
         }
         return false;
     }
-
 }
 WorldObject.id = 0;
-
 export default WorldObject;

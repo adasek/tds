@@ -1,5 +1,6 @@
 'use strict'
 import Soldier from './objects/soldier';
+import Player from './objects/player';
 import ProjectileFactory from './projectile_factory';
 
 class World {
@@ -20,7 +21,7 @@ class World {
         this.score = 0;
 
         //create player
-        this.player = new Soldier({
+        this.player = new Player({
             x: 300,
             y: 100,
             speed: 0,
@@ -137,6 +138,33 @@ class World {
             }
             return object;
         };
+    }
+
+    saveMemento() {
+        return JSON.stringify({
+            "score": this.score,
+            "player": this.player
+        });
+        //,
+        //    "worldObjects": this.worldObjects
+
+    }
+
+    loadMemento(json) {
+        //todo: cleanup 
+        console.log("loadMemento");
+
+        var loadObject = JSON.parse(json);
+        console.log(loadObject.player);
+        for (var key in loadObject.player) {
+            this.player[key] = loadObject.player[key];
+        }
+        console.log("player");
+        console.log(this.player);
+
+        this.score = loadObject.score;
+        //this.worldObjects = loadObject.worldObjects;
+
     }
 
 }

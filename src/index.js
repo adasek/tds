@@ -25,4 +25,16 @@ import KeyBindings from './controller/keybindings'
                 window.requestAnimationFrame(tickFunc);
             };
             window.requestAnimationFrame(tickFunc);
+
+            setTimeout(function () {
+                console.log("SAVING")
+                this.savedState = world.saveMemento();
+                console.log(this.savedState);
+
+            }.bind(this), 5 * 1000);
+
+            setTimeout(function () {
+                world.loadMemento(this.savedState);
+            }.bind(this), 10 * 1000);
+
         };
