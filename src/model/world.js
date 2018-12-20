@@ -81,7 +81,7 @@ class World {
         }
 
         if ((this.tickCounter++) % 100 === 0) {
-            //  this.populate();
+             this.populate();
         }
 
         this.solveCollisions();
@@ -118,19 +118,19 @@ class World {
         var world = this;
         return function (object) {
             var shifted = false;
-            while (object.x > world.width) {
+            if (object.x > world.width) {
                 object.x -= world.width;
                 shifted = true;
             }
-            while (object.y > world.height) {
+            if (object.y > world.height) {
                 object.y -= world.height;
                 shifted = true;
             }
-            while (object.x < 0) {
-                object.x += world.world;
+            if (object.x < 0) {
+                object.x += world.width;
                 shifted = true;
             }
-            while (this.y < 0) {
+            if (this.y < 0) {
                 object.y += world.height;
                 shifted = true;
             }

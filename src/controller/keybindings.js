@@ -134,6 +134,8 @@ class KeyBindings {
                 if (this.mentos.length > 0) {
                     this.world.loadMemento(this.mentos.pop());
                 }
+            } else if (kCode === 'KeyU') {
+                this.subject.setStrategyFrictionToggle();
             }
 
         }

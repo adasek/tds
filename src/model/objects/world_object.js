@@ -21,8 +21,13 @@ class WorldObject extends EventEmitter {
         this.rotation = opts.rotation || 0; //in rads, starting orientation to the right ->
         this.color = opts.color || 'red';
         this.currentTime = opts.currentTime || new Date();
+
+
         this.frictionForward = opts.frictionForward || 0;
         this.frictionSide = opts.frictionSide || 0;
+        this.strategyFrictionName = "earth";
+
+
         this.owner = opts.owner || null;
         this.worldTransform = opts.worldTransform || function (obj) {
             return obj;
@@ -225,6 +230,30 @@ class WorldObject extends EventEmitter {
                      speedSideChange:this.speedSideChange
                      */
         };
+    }
+
+    setStrategyFriction(strategy) {
+        if (strategy === "space") {
+            this.frictionForward = 0;
+            this.frictionSide = 0;
+            this.strategyFrictionName = "space";
+        } else if (strategy === "earth") {
+            this.frictionForward = 0.05;
+            this.frictionSide = 0.05;
+            this.strategyFrictionName = "earth";
+        } else {
+            throw "Strategy not implemented"
+        }
+    }
+
+    setStrategyFrictionToggle() {
+        console.log("setStrategyFrictionToggle");
+        if (this.strategyFrictionName === "space") {
+            this.setStrategyFriction("earth");
+        } else if (this.strategyFrictionName === "earth")
+        {
+            this.setStrategyFriction("space");
+        }
     }
 
     collidesWith(obj) {

@@ -7,6 +7,8 @@ class Player extends Soldier {
         opts.frictionSide  = 0.0005;
         opts.color = "green";
         super(opts);
+        
+        
         this.type = "player";
     }
 }
