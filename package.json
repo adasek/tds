@@ -20,7 +20,7 @@
   "scripts": {
     "dev": "webpack-dev-server --mode development  --output ./public_html/main.js",
     "build": "webpack --mode production --output ./public_html/main.js",
-    "test": "./node_modules/.bin/jest --no-cache"
+    "test": "node --experimental-modules ./node_modules/jest/bin/jest.js --no-cache"
   },
   "license": "ISC",
   "description": "",
