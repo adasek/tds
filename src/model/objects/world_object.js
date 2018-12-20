@@ -17,6 +17,8 @@ class WorldObject extends EventEmitter {
 
         this.x = opts.x || 0;
         this.y = opts.y || 0;
+        this.previousX = this.x;
+        this.previousY = this.y;
         this.shape = opts.shape ? opts.shape : new Circle({radius: 5});
         this.rotation = opts.rotation || 0; //in rads, starting orientation to the right ->
         this.color = opts.color || 'red';
@@ -226,7 +228,17 @@ class WorldObject extends EventEmitter {
                 var a = vect.y;
                 var b = -vect.x;
                 var c = -a * projectile.x - b * projectile.y;
-                dist = Math.abs(a * stationary.x + b * stationary.y + c) / Math.sqrt(a * a + b * b);
+                //check if we are in between projectile.x,projectile.previousX (line is bounded!)
+
+                var vTarget1 = {x: projectile.previousX - obj.x, y: projectile.previousY - obj.y};
+                var vTarget2 = {x: projectile.x - obj.x, y: projectile.y - obj.y};
+                if (((vTarget2.y * vTarget1.y + vTarget2.x - vTarget1.x)) / Math.sqrt(Math.pow(vTarget2.x - vTarget1.x, 2) + Math.pow(vTarget2.y - vTarget1.y, 2)) < 0) {
+                    //cross product is negative
+
+                    //dist from line is relevant
+                    dist = Math.abs(a * stationary.x + b * stationary.y + c) / Math.sqrt(a * a + b * b);
+                }
+
             }
             return (dist < (this.shape.radius + obj.shape.radius));
         } else {

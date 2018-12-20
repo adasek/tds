@@ -7,6 +7,7 @@ class World {
     constructor(aspectRatio) {
         this.height = 600;
         this.width = 600 * aspectRatio;
+        this.maxPopulationNumber = 20;
 
         //player, gun, bullets, enemies...
         this.gameObjects = [];
@@ -28,9 +29,10 @@ class World {
 
     populate() {
         //create something 
-        for (var i = 0; i < 1; i++) {
+        for (var i = 0; i < this.maxPopulationNumber; i++) {
             var soldier1 = new Soldier({x: Math.random() * this.width, y: Math.random() * this.height, color: 'red', speed: 0.1, rotation: Math.pi * 3 / 4});
-
+            soldier1.on('destroy',function(){this.populationNumber--;}.bind(this))
+            this.populationNumber++;
             this.attach(soldier1);
         }
     }
