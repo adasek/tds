@@ -131,7 +131,9 @@ class KeyBindings {
             }
 
             if (kCode === 'KeyP') {
-                this.world.loadMemento(this.mentos.pop());
+                if (this.mentos.length > 0) {
+                    this.world.loadMemento(this.mentos.pop());
+                }
             }
 
         }

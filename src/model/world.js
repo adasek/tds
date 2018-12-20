@@ -100,7 +100,7 @@ class World {
                 this.gameObjects.splice(index, 1);
             }
 
-            if (_worldObject.type === "soldier") {
+            if (_worldObject.type === "soldier" && !_worldObject.noScore) {
                 this.score++;
                 document.getElementById('score').innerHTML = this.score;
             }
@@ -166,7 +166,7 @@ class World {
         //delete all world objects except for player
         for (var k = 0; k < this.gameObjects.length; k++) {
             if (this.gameObjects[k].type !== "player") {
-                this.gameObjects[k].destroy();
+                this.gameObjects[k].destroy(true);
             }
         }
         this.gameObjects = [];
@@ -177,7 +177,6 @@ class World {
             this.player[key] = loadObject.player[key];
         }
 
-        console.log(loadObject.score);
         this.score = loadObject.score;
 
         //load projectiles
@@ -191,8 +190,8 @@ class World {
             var projectile = new Projectile(params);
             this.attach(projectile);
         }
-        
-        
+
+
         //load soldiers
         for (var i = 0; i < loadObject.gObjects.soldiers.length; i++) {
             var params = {};
