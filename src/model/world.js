@@ -17,6 +17,8 @@ class World {
 
         this.tickCounter = 0;
 
+        this.score = 0;
+
         //create player
         this.player = new Soldier({
             x: 300,
@@ -31,8 +33,8 @@ class World {
 
     populate() {
         //create something 
-        for (; this.populationNumber < this.maxPopulationNumber;) {
-            var soldier = new Soldier({x: Math.random() * this.width, y: Math.random() * this.height, color: 'red', speedForward: 0.1, rotation: Math.random()*Math.PI * 3 / 4});
+        for (; this.populationNumber < this.maxPopulationNumber; ) {
+            var soldier = new Soldier({x: Math.random() * this.width, y: Math.random() * this.height, color: 'red', speedForward: 0.1, rotation: Math.random() * Math.PI * 3 / 4});
             soldier.on('destroy', function () {
                 this.populationNumber--;
             }.bind(this));
@@ -94,6 +96,11 @@ class World {
             var index = this.gameObjects.indexOf(_worldObject);
             if (index > -1) {
                 this.gameObjects.splice(index, 1);
+            }
+
+            if (_worldObject.type === "soldier") {
+                this.score++;
+                document.getElementById('score').innerHTML = this.score;
             }
         }.bind(this, worldObject));
 
