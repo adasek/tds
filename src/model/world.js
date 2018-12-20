@@ -1,5 +1,6 @@
 'use strict'
 import Soldier from './objects/soldier';
+import ProjectileFactory from './projectile_factory';
 
 class World {
 
@@ -14,14 +15,21 @@ class World {
 
 
         //create player
-        this.player = new Soldier({x: 300, y: 100, speed: 0, rotation: Math.pi * 3 / 4});
-        this.gameObjects.push(this.player);
+        this.player = new Soldier({
+            x: 300,
+            y: 100, 
+            speed: 0, 
+            rotation: Math.pi * 3 / 4,
+            projectileFactory:this.createProjectileFactory()
+        
+        });
+        this.attach(this.player);
     }
 
     populate() {
         //create something 
         var soldier1 = new Soldier({x: 150, y: 200, color:'red', speed: 0.01, rotation: Math.pi * 3 / 4});
-        this.gameObjects.push(soldier1);
+        this.attach(soldier1)
     }
 
     /**
@@ -40,6 +48,22 @@ class World {
         for (var i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].tick(elapsedTime);
         }
+    }
+    
+    createProjectileFactory(){
+        return new ProjectileFactory({world:this});
+    }
+    
+    attach(worldObject){
+        worldObject.on('destroy', function(_worldObject) {
+            //todo: instead of array use object
+            var index = this.gameObjects.indexOf(_worldObject);
+            if (index > -1) {
+              this.gameObjects.splice(index, 1);
+            }
+        }.bind(this,worldObject));
+
+        this.gameObjects.push(worldObject);
     }
 }
 

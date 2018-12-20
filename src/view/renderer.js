@@ -55,7 +55,7 @@ class Renderer {
 
                     var height = object.distanceTo(object.gun.target);
                     var width = Math.max(1,(1-accuracy)*10);
-                    htmlElementGun.style.transform = "rotate(" + (object.angleTo(object.gun.target) / Math.PI * 180) + "deg)";
+                    htmlElementGun.style.transform = "rotate(" + ((object.angleTo(object.gun.target)+Math.PI/2) / Math.PI * 180) + "deg)";
                     htmlElementGun.style.width = +width + "px";
                     htmlElementGun.style.height = height + "px";
                     htmlElementGun.style.left = (object.x + object.gun.target.x) / 2 - (width / 2) + "px";

@@ -8,17 +8,21 @@
 
 import PhysicalProperty from '../physical_property';
 import Circle from '../shapes/circle';
+var EventEmitter = require('event-emitter-es6');
 
-class WorldObject {
+class WorldObject extends EventEmitter {
 
     constructor(opts) {
+        super();
+        
         this.x = opts.x || 0;
         this.y = opts.y || 0;
         this.shape = opts.shape ? opts.shape : new Circle({radius: 5});
         this.rotation = opts.rotation || 0; //in rads, starting orientation to the right ->
-        this.speed = opts.speed || 0;
         this.color = opts.color || 'red';
         this.currentTime = opts.currentTime || new Date();
+        this.frictionForward  = opts.frictionForward || 0;
+        this.frictionSide  = opts.frictionSide || 0;
 
         this.rotationChange = new PhysicalProperty({
             "max": Math.PI / 1000, //maximum per 1ms
@@ -49,8 +53,8 @@ class WorldObject {
             "increaseSlopeNegative": 1 / 1000
         });
 
-        this.speedForward = 0;
-        this.speedSide = 0;
+        this.speedForward = opts.speedForward || 0;
+        this.speedSide = opts.speedSide || 0;
 
         this.id = WorldObject.id++;
 
@@ -100,8 +104,8 @@ class WorldObject {
         }
 
         // apply friction
-        this.speedForward = applyFriction(this.speedForward, 0.001);
-        this.speedSide = applyFriction(this.speedSide, 0.0001);
+        this.speedForward = applyFriction(this.speedForward, this.frictionForward);
+        this.speedSide = applyFriction(this.speedSide, this.frictionSide);
 
 
         // apply speed in the vector of rotation
@@ -112,18 +116,26 @@ class WorldObject {
         this.x += Math.cos(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
         this.y -= Math.sin(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
 
+     var shifted=false;
         while (this.x > 600) {
             this.x -= 600;
+            shifted=true;
         }
         while (this.y > 600) {
             this.y -= 600;
+            shifted=true;
         }
         while (this.x < 0) {
             this.x += 600;
+            shifted=true;
         }
         while (this.y < 0) {
             this.y += 600;
+            shifted=true;
         }
+       if(this.type === "projectile" && shifted){
+           this.destroy();
+    }
 
         this.currentTime = newTime;
     }
@@ -181,12 +193,18 @@ class WorldObject {
     }
 
     angleTo(target) {
-        return Math.asin((this.x - target.x) / this.distanceTo(target));
+        var angle = Math.acos((target.x-this.x) / this.distanceTo(target));
+        return angle;
 
     }
 
     distanceTo(target) {
         return Math.sqrt((this.x - target.x) * (this.x - target.x) + (this.y - target.y) * (this.y - target.y));
+    }
+    
+    
+    destroy(){
+           this.emit('destroy');
     }
 
 }
