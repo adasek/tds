@@ -1,7 +1,7 @@
 'use strict'
 
 class KeyBindings {
-    constructor(subject, gameArea) {
+    constructor(subject, gameArea, world) {
         //Binding
         window.onkeydown = (function (event) {
             this.keyDown(event);
@@ -45,6 +45,11 @@ class KeyBindings {
 
         // for mouse events
         this.gameArea = gameArea;
+
+        //for mementos
+        this.world = world;
+
+        this.mentos = [];
     }
 
     keyDown(event) {
@@ -124,6 +129,11 @@ class KeyBindings {
             if (methodName.length > 0) {
                 this.subject[methodName](mParam);
             }
+
+            if (kCode === 'KeyP') {
+                this.world.loadMemento(this.mentos.pop());
+            }
+
         }
     }
 
@@ -159,8 +169,13 @@ class KeyBindings {
             }
 
             if (methodName.length > 0) {
+                //this is some command
+                //save memento
+                this.mentos.push(this.world.saveMemento());
+
                 this.subject[methodName](mParam);
             }
+
         }
     }
 

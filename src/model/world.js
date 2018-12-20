@@ -177,6 +177,7 @@ class World {
             this.player[key] = loadObject.player[key];
         }
 
+        console.log(loadObject.score);
         this.score = loadObject.score;
 
         //load projectiles
@@ -202,7 +203,6 @@ class World {
             var soldier = new Soldier(params);
             this.attach(soldier);
         }
-
     }
 
 }

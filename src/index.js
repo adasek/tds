@@ -12,7 +12,7 @@ import KeyBindings from './controller/keybindings'
 
             var renderer = new Renderer(world);
 
-            var keyBindings = new KeyBindings(world.player, renderer.gameArea);
+            var keyBindings = new KeyBindings(world.player, renderer.gameArea, world);
 
 
             //start simulation
@@ -25,7 +25,7 @@ import KeyBindings from './controller/keybindings'
                 window.requestAnimationFrame(tickFunc);
             };
             window.requestAnimationFrame(tickFunc);
-
+            /*
             setTimeout(function () {
                 console.log("SAVING")
                 this.savedState = world.saveMemento();
@@ -36,5 +36,5 @@ import KeyBindings from './controller/keybindings'
             setTimeout(function () {
                 world.loadMemento(this.savedState);
             }.bind(this), 10 * 1000);
-
+            */
         };
