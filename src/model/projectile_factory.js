@@ -25,7 +25,6 @@ class ProjectileFactory {
             this.createOneProjectile(opts, opts.angle + Math.PI / 8, shootErr);
             this.createOneProjectile(opts, opts.angle, shootErr);
             this.createOneProjectile(opts, opts.angle - Math.PI / 8, shootErr);
-
         } else {
             throw "Weapon not implemented";
 

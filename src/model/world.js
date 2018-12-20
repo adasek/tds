@@ -8,12 +8,14 @@ class World {
         this.height = 600;
         this.width = 600 * aspectRatio;
         this.maxPopulationNumber = 20;
+        this.populationNumber = 0;
 
         //player, gun, bullets, enemies...
         this.gameObjects = [];
 
         this.populate();
 
+        this.tickCounter = 0;
 
         //create player
         this.player = new Soldier({
@@ -29,11 +31,13 @@ class World {
 
     populate() {
         //create something 
-        for (var i = 0; i < this.maxPopulationNumber; i++) {
-            var soldier1 = new Soldier({x: Math.random() * this.width, y: Math.random() * this.height, color: 'red', speed: 0.1, rotation: Math.pi * 3 / 4});
-            soldier1.on('destroy',function(){this.populationNumber--;}.bind(this))
+        for (; this.populationNumber < this.maxPopulationNumber;) {
+            var soldier = new Soldier({x: Math.random() * this.width, y: Math.random() * this.height, color: 'red', speedForward: 0.1, rotation: Math.random()*Math.PI * 3 / 4});
+            soldier.on('destroy', function () {
+                this.populationNumber--;
+            }.bind(this));
             this.populationNumber++;
-            this.attach(soldier1);
+            this.attach(soldier);
         }
     }
 
@@ -70,6 +74,10 @@ class World {
 
         for (var i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].tick(elapsedTime);
+        }
+
+        if ((this.tickCounter++) % 100 === 0) {
+            this.populate();
         }
 
         this.solveCollisions();
