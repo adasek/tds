@@ -29,7 +29,7 @@ class World {
     populate() {
         //create something 
         var soldier1 = new Soldier({x: 150, y: 200, color: 'red', speed: 0.01, rotation: Math.pi * 3 / 4});
-        this.attach(soldier1)
+        this.attach(soldier1);
     }
 
     /**
