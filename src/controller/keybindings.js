@@ -1,16 +1,31 @@
 'use strict'
 
 class KeyBindings {
-    constructor(subject) {
+    constructor(subject,gameArea) {
         //Binding
         window.onkeydown = (function (event) {
-            this.keydown(event);
+            this.keyDown(event);
         }).bind(this);
 
         window.onkeyup = (function (event) {
-            this.keyup(event);
+            this.keyUp(event);
         }).bind(this);
 
+        gameArea.onmousedown = (function (event) {
+            this.mouseToggle('down');
+        }).bind(this);
+        
+        
+        gameArea.onmouseup = (function (event) {
+            this.mouseToggle('up',event);
+        }).bind(this);
+        
+        gameArea.onmouseout = (function (event) {
+            this.mouseToggle('up',event);
+        }).bind(this);
+        
+        
+        
         /**
          * Entity controlled by this bindings
          * @type {WorldObject}
@@ -24,7 +39,7 @@ class KeyBindings {
         this.keyPressed = {};
     }
 
-    keydown(event) {
+    keyDown(event) {
         if (this.keyPressed[event.code] > 0) {
             //already pressed
         } else {
@@ -57,7 +72,7 @@ class KeyBindings {
         }
     }
 
-    keyup(event) {
+    keyUp(event) {
         if (!(event.code in this.keyPressed)) {
             //not
         } else {
@@ -89,6 +104,35 @@ class KeyBindings {
             }
         }
     }
+
+    mouseToggle(type,event){
+        var code= "MOUSE" + event.button+"_"+type;
+        if (this.keyPressed[code] > 0) {
+            //already pressed
+        } else {
+            this.keyPressed[code] = new Date();
+
+            var rect = event.target.getBoundingClientRect();
+  
+            var methodName = "";
+            var mParam = {
+                time: this.keyPressed[event.code],
+                positionX: event.clientX - rect.left,
+                positionY: event.clientY - rect.top
+            };
+            
+            if (code === 'MOUSE0_down') {
+                methodName = "beginShoot";
+            }else if(code === 'MOUSE0_up'){
+                methodName = "endShoot";
+            }
+
+            if (methodName.length > 0) {
+                this.subject[methodName](mParam);
+            }
+        }
+    }
+    
 
     /**
      * Perform all actions that should be performed based on the keys pressed

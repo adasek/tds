@@ -48,10 +48,11 @@ class WorldObject {
             "increaseSlopeNegative": 1 / 1000
         });
 
-        this.speedForward=0;
-        this.speedSide=0;
+        this.speedForward = 0;
+        this.speedSide = 0;
 
         this.id = WorldObject.id++;
+
     }
 
     /**
@@ -81,35 +82,35 @@ class WorldObject {
 
         this.speedForward += this.speedForwardChange.valueAt(this.currentTime);
         this.speedSide += this.speedSideChange.valueAt(this.currentTime);
-        
-        function applyFriction(value,friction){
+
+        function applyFriction(value, friction) {
             if (value > 0) {
-            value -= friction;
-            if (value < 0) {
-                value = 0;
+                value -= friction;
+                if (value < 0) {
+                    value = 0;
+                }
+            } else if (value < 0) {
+                value += friction;
+                if (value > 0) {
+                    value = 0;
+                }
             }
-        } else if (value < 0) {
-            value += friction;
-            if (value > 0) {
-                value = 0;
-            }
+            return value;
         }
-        return value;
-        }
-        
+
         // apply friction
-        this.speedForward = applyFriction(this.speedForward,0.001);
-        this.speedSide = applyFriction(this.speedSide,0.0001);
-        
+        this.speedForward = applyFriction(this.speedForward, 0.001);
+        this.speedSide = applyFriction(this.speedSide, 0.0001);
+
 
         // apply speed in the vector of rotation
         this.x += Math.cos(this.rotation) * this.speedForward * elapsedTime;
         this.y -= Math.sin(this.rotation) * this.speedForward * elapsedTime;
         // apply side speed - in the normal vector
-        
-        this.x += Math.cos(this.rotation+Math.PI/2) * this.speedSide * elapsedTime;
-        this.y -= Math.sin(this.rotation+Math.PI/2) * this.speedSide * elapsedTime;
-        
+
+        this.x += Math.cos(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
+        this.y -= Math.sin(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
+
         this.currentTime = newTime;
     }
 
@@ -138,7 +139,7 @@ class WorldObject {
     endDecreasingSpeedForward(opts) {
         this.speedForwardChange.endDecreasing(opts);
     }
-    
+
     beginIncreasingSpeedSide(opts) {
         this.speedSideChange.beginIncreasing(opts);
     }
@@ -151,6 +152,18 @@ class WorldObject {
     endDecreasingSpeedSide(opts) {
         this.speedSideChange.endDecreasing(opts);
     }
+
+    beginShoot(opts) {
+        if (typeof (this.gun) === "object" && this.gun !== null && typeof (this.gun.shootPrepare) === "function") {
+            this.gun.shootPrepare(opts);
+        }
+    }
+    endShoot(opts) {
+        if (typeof (this.gun) === "object" && this.gun !== null && typeof (this.gun.shootPerform) === "function") {
+            this.gun.shootPerform(opts);
+        }
+    }
+
 }
 WorldObject.id = 0;
 

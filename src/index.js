@@ -9,9 +9,10 @@ import KeyBindings from './controller/keybindings'
 
             var world = new World(16 / 9);
 
-            var keyBindings = new KeyBindings(world.player);
 
             var renderer = new Renderer(world);
+
+            var keyBindings = new KeyBindings(world.player, renderer.gameArea);
 
 
             //start simulation
@@ -21,7 +22,7 @@ import KeyBindings from './controller/keybindings'
                 renderer.render(world);
                 keyBindings.tick(33);
                 //window.setTimeout(tickFunc,500);
-               window.requestAnimationFrame(tickFunc);
+                window.requestAnimationFrame(tickFunc);
             };
             window.requestAnimationFrame(tickFunc);
         };
