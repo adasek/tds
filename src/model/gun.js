@@ -17,6 +17,13 @@ class Gun extends WorldObject {
         this.preparingTime = null;
         this.owner = opts.owner;
         this.projectileFactory = opts.projectileFactory;
+
+        this.weaponTypes = Object.freeze({"SINGLE": 0, "SHOTGUN": 1});
+        this.weaponType = this.weaponTypes["SINGLE"];
+    }
+
+    toggle(opts) {
+        this.weaponType = (this.weaponType + 1) % Object.keys(this.weaponTypes).length;
     }
 
     shootPrepare(opts) {
@@ -33,6 +40,7 @@ class Gun extends WorldObject {
         var accuracy = this.getAccuracy({});
         //create projectile
         var projectile = this.projectileFactory.create({
+            projectileType: this.weaponType,
             x: this.owner.x,
             y: this.owner.y,
             owner: this.owner, //prevent self inflicted damage

@@ -185,6 +185,13 @@ class WorldObject extends EventEmitter {
             this.gun.shootPerform(opts);
         }
     }
+    
+    toggleWeapon(opts){
+        opts.time = opts.time || new Date();      
+        if (typeof (this.gun) === "object" && this.gun !== null && typeof (this.gun.toggle) === "function") {
+            this.gun.toggle(opts);
+        }
+    }
 
     angleTo(target) {
         var angle = 0;

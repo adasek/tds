@@ -140,8 +140,8 @@ class KeyBindings {
             } else if (code === 'MOUSE0' && type === "up") {
                 methodName = "endShoot";
             }else if(code === 'MOUSE1' && type ==="up"){
-                //change 
-                
+                //change weapon
+                methodName = "toggleWeapon";    
             }
 
             if (methodName.length > 0) {
