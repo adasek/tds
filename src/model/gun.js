@@ -6,22 +6,34 @@
 
 'use strict'
 
-class Gun {
+import WorldObject from './objects/world_object';
+
+class Gun extends WorldObject {
 
     constructor(opts) {
+        opts = opts || {};
+        super(opts);
         this.preparingTime = null;
+        this.owner = opts.owner;
     }
     
     shootPrepare(opts){
-        console.log("Prep");
-        console.log(opts);
+        this.target = {x:opts.positionX,y:opts.positionY};
+        if(!opts.time){
+            throw "Should provide time";
+        }
         this.preparingTime = opts.time;
-        
+        console.log("Target acquired");
     }
+    
     shootPerform(opts){
         console.log("Bang");
-        opts.time - this.preparingTime;
+        var accuracy = this.getAccuracy({});
         
+                
+        
+        this.target = null;
+        this.preparingTime=null;
     }
     
     /**
@@ -33,10 +45,15 @@ class Gun {
         if(this.preparingTime===null){
             return null; //no shooting in progress
         }
+        
         //accuracy from 0 to 1
-        var accuracy = min(1,opts.time - this.preparingTime);
-        var accuracyAngle = (1.1-accuracy)*(Math.PI/6);
+        var accuracyAngle = (1.1-this.getAccuracy(opts))*(Math.PI/6);
         return accuracyAngle;
+    }
+    
+    getAccuracy(opts){
+        var time = opts.time || new Date();
+        return Math.min(1,(time - this.preparingTime)/1000);
     }
     
 }

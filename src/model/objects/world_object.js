@@ -7,13 +7,14 @@
 'use strict'
 
 import PhysicalProperty from '../physical_property';
+import Circle from '../shapes/circle';
 
 class WorldObject {
 
     constructor(opts) {
         this.x = opts.x || 0;
         this.y = opts.y || 0;
-        this.shape = opts.shape ? opts.shape : new Point();
+        this.shape = opts.shape ? opts.shape : new Circle({radius: 5});
         this.rotation = opts.rotation || 0; //in rads, starting orientation to the right ->
         this.speed = opts.speed || 0;
         this.color = opts.color || 'red';
@@ -111,6 +112,19 @@ class WorldObject {
         this.x += Math.cos(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
         this.y -= Math.sin(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
 
+        while (this.x > 600) {
+            this.x -= 600;
+        }
+        while (this.y > 600) {
+            this.y -= 600;
+        }
+        while (this.x < 0) {
+            this.x += 600;
+        }
+        while (this.y < 0) {
+            this.y += 600;
+        }
+
         this.currentTime = newTime;
     }
 
@@ -154,14 +168,25 @@ class WorldObject {
     }
 
     beginShoot(opts) {
+        opts.time = opts.time || new Date();
         if (typeof (this.gun) === "object" && this.gun !== null && typeof (this.gun.shootPrepare) === "function") {
             this.gun.shootPrepare(opts);
         }
     }
     endShoot(opts) {
+        opts.time = opts.time || new Date();
         if (typeof (this.gun) === "object" && this.gun !== null && typeof (this.gun.shootPerform) === "function") {
             this.gun.shootPerform(opts);
         }
+    }
+
+    angleTo(target) {
+        return Math.asin((this.x - target.x) / this.distanceTo(target));
+
+    }
+
+    distanceTo(target) {
+        return Math.sqrt((this.x - target.x) * (this.x - target.x) + (this.y - target.y) * (this.y - target.y));
     }
 
 }

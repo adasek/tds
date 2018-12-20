@@ -1,7 +1,7 @@
 'use strict'
 import WorldObject from './world_object';
 import Circle from '../shapes/circle';
-import Gun from '../gun';s
+import Gun from '../gun';
 
 class Soldier extends WorldObject {
     constructor(opts) {
@@ -9,7 +9,7 @@ class Soldier extends WorldObject {
         opts.color = opts.color || 'green';
         super(opts);
         
-        this.gun = new Gun();
+        this.gun = new Gun({owner:this});
         
     }
 }

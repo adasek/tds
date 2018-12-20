@@ -1,7 +1,7 @@
 'use strict'
 
 class KeyBindings {
-    constructor(subject,gameArea) {
+    constructor(subject, gameArea) {
         //Binding
         window.onkeydown = (function (event) {
             this.keyDown(event);
@@ -12,20 +12,25 @@ class KeyBindings {
         }).bind(this);
 
         gameArea.onmousedown = (function (event) {
-            this.mouseToggle('down');
+            this.mouseToggle('down', event);
         }).bind(this);
-        
-        
+
+
         gameArea.onmouseup = (function (event) {
-            this.mouseToggle('up',event);
+            this.mouseToggle('up', event);
         }).bind(this);
-        
+
         gameArea.onmouseout = (function (event) {
-            this.mouseToggle('up',event);
+            /*
+            if(event.target.id === "gameArea"){
+                console.log("out")
+            this.mouseToggle('up', event);
+        }
+            */
         }).bind(this);
-        
-        
-        
+
+
+
         /**
          * Entity controlled by this bindings
          * @type {WorldObject}
@@ -37,6 +42,9 @@ class KeyBindings {
          * @type {Object}
          */
         this.keyPressed = {};
+        
+        // for mouse events
+        this.gameArea = gameArea;
     }
 
     keyDown(event) {
@@ -60,7 +68,7 @@ class KeyBindings {
                 methodName = "beginIncreasingSpeedForward";
             } else if (kCode === 'KeyS') {
                 methodName = "beginDecreasingSpeedForward";
-            }else if (kCode === 'KeyA') {
+            } else if (kCode === 'KeyA') {
                 methodName = "beginIncreasingSpeedSide";
             } else if (kCode === 'KeyD') {
                 methodName = "beginDecreasingSpeedSide";
@@ -89,11 +97,11 @@ class KeyBindings {
                 methodName = "endIncreasingRotation";
             } else if (kCode === 'ArrowRight') {
                 methodName = "endDecreasingRotation";
-            }else if (kCode === 'KeyW') {
+            } else if (kCode === 'KeyW') {
                 methodName = "endIncreasingSpeedForward";
             } else if (kCode === 'KeyS') {
                 methodName = "endDecreasingSpeedForward";
-            }else if (kCode === 'KeyA') {
+            } else if (kCode === 'KeyA') {
                 methodName = "endIncreasingSpeedSide";
             } else if (kCode === 'KeyD') {
                 methodName = "endDecreasingSpeedSide";
@@ -105,25 +113,31 @@ class KeyBindings {
         }
     }
 
-    mouseToggle(type,event){
-        var code= "MOUSE" + event.button+"_"+type;
-        if (this.keyPressed[code] > 0) {
+    mouseToggle(type, event) {
+        var code = "MOUSE" + event.button;
+        if (type === "down" && this.keyPressed[code] > 0) {
             //already pressed
         } else {
-            this.keyPressed[code] = new Date();
+            var time = new Date();
+            if (type === "down") {
+                this.keyPressed[code] = time;
+            } else { //type up
+                time = this.keyPressed[code];
+                delete(this.keyPressed[code]);
+            }
 
-            var rect = event.target.getBoundingClientRect();
-  
+            var rect = this.gameArea.getBoundingClientRect();
+
             var methodName = "";
             var mParam = {
                 time: this.keyPressed[event.code],
                 positionX: event.clientX - rect.left,
                 positionY: event.clientY - rect.top
             };
-            
-            if (code === 'MOUSE0_down') {
+
+            if (code === 'MOUSE0' && type === "down") {
                 methodName = "beginShoot";
-            }else if(code === 'MOUSE0_up'){
+            } else if (code === 'MOUSE0' && type === "up") {
                 methodName = "endShoot";
             }
 
@@ -132,7 +146,6 @@ class KeyBindings {
             }
         }
     }
-    
 
     /**
      * Perform all actions that should be performed based on the keys pressed

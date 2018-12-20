@@ -39,6 +39,32 @@ class Renderer {
                 throw "Unsupported shape: " + object.shape.constructor.name;
             }
 
+            if (object.gun) {
+                var target = object.gun.target;
+                //render two lines on the accuracy border
+                var htmlElementGun = this.findOrCreateElement(object.gun);
+                if (target == null) {
+                    //gun is not shooting
+                    htmlElementGun.style.display = "none";
+                } else {
+                    var accuracy = object.gun.getAccuracy({});
+                    var accuracyAngle = object.gun.getAccuracyAngle({});
+                    //should show the accuracy somehow
+                    htmlElementGun.style.display = "block";
+                    htmlElementGun.style.transformOrigin = "center center";
+
+                    var height = object.distanceTo(object.gun.target);
+                    var width = Math.max(1,(1-accuracy)*10);
+                    htmlElementGun.style.transform = "rotate(" + (object.angleTo(object.gun.target) / Math.PI * 180) + "deg)";
+                    htmlElementGun.style.width = +width + "px";
+                    htmlElementGun.style.height = height + "px";
+                    htmlElementGun.style.left = (object.x + object.gun.target.x) / 2 - (width / 2) + "px";
+                    htmlElementGun.style.top = (object.y + object.gun.target.y ) / 2 - (height / 2) + "px";
+                   //  htmlElementGun.style.backgroundColor = "rgba(255,100,100,"+accuracy+")";
+                     htmlElementGun.style.backgroundColor = "rgba(255,100,100,"+(accuracy+0.1)+")";
+                }
+            }
+
         }
     }
 
