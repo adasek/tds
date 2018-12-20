@@ -132,7 +132,7 @@ class KeyBindings {
             var mParam = {
                 time: this.keyPressed[event.code],
                 positionX: event.clientX - rect.left,
-                positionY: event.clientY - rect.top
+                positionY: rect.height  - (event.clientY - rect.top) //bottom should be 0
             };
 
             if (code === 'MOUSE0' && type === "down") {

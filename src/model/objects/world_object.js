@@ -14,15 +14,16 @@ class WorldObject extends EventEmitter {
 
     constructor(opts) {
         super();
-        
+
         this.x = opts.x || 0;
         this.y = opts.y || 0;
         this.shape = opts.shape ? opts.shape : new Circle({radius: 5});
         this.rotation = opts.rotation || 0; //in rads, starting orientation to the right ->
         this.color = opts.color || 'red';
         this.currentTime = opts.currentTime || new Date();
-        this.frictionForward  = opts.frictionForward || 0;
-        this.frictionSide  = opts.frictionSide || 0;
+        this.frictionForward = opts.frictionForward || 0;
+        this.frictionSide = opts.frictionSide || 0;
+        this.worldTransform = opts.worldTransform || function(obj){return obj;};
 
         this.rotationChange = new PhysicalProperty({
             "max": Math.PI / 1000, //maximum per 1ms
@@ -83,7 +84,6 @@ class WorldObject extends EventEmitter {
             throw "this.rotationB";
         }
 
-        this.rotationAngle = (-this.rotation) * 180 / Math.PI + "deg";
 
         this.speedForward += this.speedForwardChange.valueAt(this.currentTime);
         this.speedSide += this.speedSideChange.valueAt(this.currentTime);
@@ -110,32 +110,13 @@ class WorldObject extends EventEmitter {
 
         // apply speed in the vector of rotation
         this.x += Math.cos(this.rotation) * this.speedForward * elapsedTime;
-        this.y -= Math.sin(this.rotation) * this.speedForward * elapsedTime;
+        this.y += Math.sin(this.rotation) * this.speedForward * elapsedTime;
         // apply side speed - in the normal vector
 
         this.x += Math.cos(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
-        this.y -= Math.sin(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
-
-     var shifted=false;
-        while (this.x > 600) {
-            this.x -= 600;
-            shifted=true;
-        }
-        while (this.y > 600) {
-            this.y -= 600;
-            shifted=true;
-        }
-        while (this.x < 0) {
-            this.x += 600;
-            shifted=true;
-        }
-        while (this.y < 0) {
-            this.y += 600;
-            shifted=true;
-        }
-       if(this.type === "projectile" && shifted){
-           this.destroy();
-    }
+        this.y += Math.sin(this.rotation + Math.PI / 2) * this.speedSide * elapsedTime;
+        
+        this.worldTransform(this);
 
         this.currentTime = newTime;
     }
@@ -193,8 +174,15 @@ class WorldObject extends EventEmitter {
     }
 
     angleTo(target) {
-        var angle = Math.acos((target.x-this.x) / this.distanceTo(target));
-        console.log("angle "+angle)
+        var angle=0;
+        if (target.y >= this.y) {
+            //first and second quadrant
+            angle = Math.acos((target.x - this.x) / this.distanceTo(target));
+        }else{
+            //second and third quadrant
+            angle = 2*Math.PI - Math.acos((target.x - this.x) / this.distanceTo(target));
+            
+        }
         return angle;
 
     }
@@ -202,10 +190,9 @@ class WorldObject extends EventEmitter {
     distanceTo(target) {
         return Math.sqrt((this.x - target.x) * (this.x - target.x) + (this.y - target.y) * (this.y - target.y));
     }
-    
-    
-    destroy(){
-           this.emit('destroy');
+
+    destroy() {
+        this.emit('destroy');
     }
 
 }

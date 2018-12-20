@@ -8,7 +8,7 @@ class Soldier extends WorldObject {
         opts.shape = opts.shape || new Circle({radius: 10});
         opts.color = opts.color || 'green';
         opts.frictionForward  = opts.frictionForward || 0.008;
-        opts.frictionSide  = opts.frictionSide || 0.0004;
+        opts.frictionSide  = opts.frictionSide || 0.0005;
         opts.projectileFactory  = opts.projectileFactory ||null;
         super(opts);
         

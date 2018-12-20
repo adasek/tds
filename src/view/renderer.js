@@ -16,8 +16,10 @@ class Renderer {
     render(world) {
         //render world itself
         this.worldElement = this.findOrCreateElement(world);
-        this.worldElement.width = world.width + "px";
-        this.worldElement.height = world.height + "px";
+        this.worldElement.style.width = world.width + "px";
+        this.worldElement.style.height = world.height + "px";
+        this.gameArea.style.width = world.width + "px";
+        this.gameArea.style.height = world.height + "px";
 
         for (var i = 0; i < world.gameObjects.length; i++) {
             var object = world.gameObjects[i];
@@ -29,9 +31,11 @@ class Renderer {
                 //color, center x, center y in gameObjects[i]
                 //show such a circle in css
                 htmlElement.style.borderRadius = "20%";
-                htmlElement.style.left = (object.x - object.shape.radius) + "px";
-                htmlElement.style.top = (object.y - object.shape.radius) + "px";
-                htmlElement.style.transform = 'rotate(' + object.rotationAngle + ')';
+                /*
+                 htmlElement.style.left = (object.x - object.shape.radius) + "px";
+                 htmlElement.style.top = (world.height - (object.y - object.shape.radius)) + "px";
+                 */
+                htmlElement.style.transform = 'translate(' + (object.x-object.shape.radius) + 'px,' + (world.height - object.y - object.shape.radius) + 'px) rotate(' + this.rotationToDeg(object.rotation) + ') ';
                 htmlElement.style.backgroundColor = object.color;
                 htmlElement.style.width = (object.shape.radius * 2) + "px";
                 htmlElement.style.height = (object.shape.radius * 2) + "px";
@@ -53,19 +57,26 @@ class Renderer {
                     htmlElementGun.style.display = "block";
                     htmlElementGun.style.transformOrigin = "center center";
 
-                    var height = object.distanceTo(object.gun.target);
-                    var width = Math.max(1,(1-accuracy)*10);
-                    htmlElementGun.style.transform = "rotate(" + ((object.angleTo(object.gun.target)+Math.PI/2) / Math.PI * 180) + "deg)";
-                    htmlElementGun.style.width = +width + "px";
+                    var width = object.distanceTo(object.gun.target);
+                    var height = Math.max(1, (1 - accuracy) * 10);
+                    htmlElementGun.style.width = width + "px";
                     htmlElementGun.style.height = height + "px";
-                    htmlElementGun.style.left = (object.x + object.gun.target.x) / 2 - (width / 2) + "px";
-                    htmlElementGun.style.top = (object.y + object.gun.target.y ) / 2 - (height / 2) + "px";
-                   //  htmlElementGun.style.backgroundColor = "rgba(255,100,100,"+accuracy+")";
-                     htmlElementGun.style.backgroundColor = "rgba(255,100,100,"+(accuracy+0.1)+")";
+                    var centerX = (object.x + object.gun.target.x) / 2;
+                    var centerY = (object.y + object.gun.target.y) / 2;
+                    
+                    htmlElementGun.style.transform = 'translate(' + (centerX-width/2) + 'px,' + (world.height - (centerY+height/2)) + 'px) rotate(' + this.rotationToDeg(object.angleTo(object.gun.target)) + ')';
+                    
+
+                    //  htmlElementGun.style.backgroundColor = "rgba(255,100,100,"+accuracy+")";
+                    htmlElementGun.style.backgroundColor = "rgba(255,100,100," + (accuracy + 0.1) + ")";
                 }
             }
 
         }
+    }
+
+    rotationToDeg(rot) {
+        return ((-rot) * 180 / Math.PI + Math.PI / 2) + "deg";
     }
 
     findOrCreateElement(obj) {

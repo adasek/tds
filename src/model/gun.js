@@ -38,8 +38,6 @@ class Gun extends WorldObject {
             rotation: this.owner.angleTo(this.target)
         });
 
-
-
         this.target = null;
         this.preparingTime = null;
     }
