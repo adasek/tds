@@ -30,7 +30,7 @@ class Renderer {
 
             var htmlElement = this.findOrCreateElement(object);
 
-            if (object.shape.constructor.name === "Circle") {
+            if (object.shape.type === "circle") {
                 //Radius: in the shape
                 //color, center x, center y in gameObjects[i]
                 //show such a circle in css
@@ -44,7 +44,7 @@ class Renderer {
                 htmlElement.style.width = (object.shape.radius * 2) + "px";
                 htmlElement.style.height = (object.shape.radius * 2) + "px";
             } else {
-                throw "Unsupported shape: " + object.shape.constructor.name;
+                throw "Unsupported shape: " + object.shape.type;
             }
 
             if (object.gun) {
@@ -100,12 +100,12 @@ class Renderer {
 
             //add to my cache
             this.htmlElements[id] = htmlElement;
-                obj.on('destroy', function (_id) {
-                    if (typeof (this.htmlElements[_id]) !== "undefined" && this.htmlElements[_id] !== null) {
-                        this.gameArea.removeChild(this.htmlElements[_id]);
-                    }
-                    delete(this.htmlElements[_id]);
-                }.bind(this, id));
+            obj.on('destroy', function (_id) {
+                if (typeof (this.htmlElements[_id]) !== "undefined" && this.htmlElements[_id] !== null) {
+                    this.gameArea.removeChild(this.htmlElements[_id]);
+                }
+                delete(this.htmlElements[_id]);
+            }.bind(this, id));
         }
 
 
