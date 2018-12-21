@@ -8,7 +8,7 @@
 
 import PhysicalProperty from '../physical_property';
 import Circle from '../shapes/circle';
-var EventEmitter = require('event-emitter-es6');
+import EventEmitter from '../../../node_modules/event-emitter-es6/dist/event-emitter';
 class WorldObject extends EventEmitter {
 
     constructor(opts) {
@@ -238,8 +238,8 @@ class WorldObject extends EventEmitter {
             this.frictionSide = 0;
             this.strategyFrictionName = "space";
         } else if (strategy === "earth") {
-            this.frictionForward = 0.05;
-            this.frictionSide = 0.05;
+            this.frictionForward = 0.008;
+            this.frictionSide = 0.0005;
             this.strategyFrictionName = "earth";
         } else {
             throw "Strategy not implemented"
