@@ -15,15 +15,19 @@ class Renderer {
 
     render(world) {
         //render world itself
-        this.worldElement = this.findOrCreateElement(world);
-        this.worldElement.style.width = world.width + "px";
-        this.worldElement.style.height = world.height + "px";
         this.gameArea.style.width = world.width + "px";
         this.gameArea.style.height = world.height + "px";
 
         for (var i = 0; i < world.gameObjects.length; i++) {
             var object = world.gameObjects[i];
             //go through the game objects
+            if (typeof (object) !== "object"
+                    || object === null
+                    || (typeof (object.on) !== "function")
+                    ) {
+                throw "Object weird";
+            }
+
             var htmlElement = this.findOrCreateElement(object);
 
             if (object.shape.constructor.name === "Circle") {
@@ -81,7 +85,7 @@ class Renderer {
 
     findOrCreateElement(obj) {
         var id = "";
-        if (obj.constructor.name === "World") {
+        if (obj.type === "world") {
             id = "world";
         } else {
             //world objects should all have unique id
@@ -96,13 +100,12 @@ class Renderer {
 
             //add to my cache
             this.htmlElements[id] = htmlElement;
-
-            obj.on('destroy', function (_id) {
-                if (typeof (this.htmlElements[_id]) !== "undefined" && this.htmlElements[_id] !== null) {
-                    this.gameArea.removeChild(this.htmlElements[_id]);
-                }
-                delete(this.htmlElements[_id]);
-            }.bind(this, id));
+                obj.on('destroy', function (_id) {
+                    if (typeof (this.htmlElements[_id]) !== "undefined" && this.htmlElements[_id] !== null) {
+                        this.gameArea.removeChild(this.htmlElements[_id]);
+                    }
+                    delete(this.htmlElements[_id]);
+                }.bind(this, id));
         }
 
 

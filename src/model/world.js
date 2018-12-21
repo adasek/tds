@@ -12,6 +12,7 @@ class World {
         this.maxPopulationNumber = 20;
         this.populationNumber = 0;
 
+        this.type = "world";
         //player, gun, bullets, enemies...
         this.gameObjects = [];
 
@@ -81,7 +82,7 @@ class World {
         }
 
         if ((this.tickCounter++) % 100 === 0) {
-             this.populate();
+            this.populate();
         }
 
         this.solveCollisions();
